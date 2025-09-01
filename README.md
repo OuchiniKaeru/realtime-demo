@@ -26,12 +26,9 @@ Check .env.example for an example .env file.
 ## Setup
 
 1. Clone the repository
-2. Create a virtual environment: `python -m venv .venv`
-3. Activate it: 
-   - Windows: `.venv\Scripts\activate`
-   - Unix/macOS: `source .venv/bin/activate`
-4. Install dependencies: `pip install -r requirements.txt`
-5. Create `.env` file based on `.env.example`
+2. `cd realtime-webrtc`
+3. Create a virtual environment: `uv sync --no-cache`
+4. Create `.env` file based on `.env.example`
 
 
 
@@ -47,7 +44,7 @@ Notes:
 
 ## Running
 
-1. Start server: `python app.py`
+1. Start server: `uv run app.py`
 2. Open index.html in a browser (Tip: use live server extension for VSCode)
 3. Click Start and allow microphone access
 4. Try asking: "What's the weather like in Amsterdam?"

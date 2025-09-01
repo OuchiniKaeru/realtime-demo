@@ -1,0 +1,8 @@
+{
+  "weather": {
+    "enabled": false
+  },
+  "search": {
+    "enabled": false
+  }
+}

@@ -9,8 +9,15 @@ class UI {
         status: document.getElementById('status'),
         error: document.getElementById('error'),
         imageContainer: document.getElementById('imageContainer'),
-        contentWrapper: document.querySelector('.content-wrapper')
+        contentWrapper: document.querySelector('.content-wrapper'),
+        toggleWeather: document.getElementById('toggleWeather'),
+        toggleSearch: document.getElementById('toggleSearch')
     };
+
+    static updateToolToggles(weatherEnabled, searchEnabled) {
+        this.elements.toggleWeather.checked = weatherEnabled;
+        this.elements.toggleSearch.checked = searchEnabled;
+    }
 
     static updateStatus(message) {
         this.elements.status.textContent = message;
@@ -402,10 +409,53 @@ class App {
                 e.target.value = this.currentVoice;
             }
         });
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             UI.updateStatus('Ready to start');
             UI.elements.voiceSelect.value = this.currentVoice;
+            
+            // tools_config.jsonから初期ツール設定を読み込み、UIを更新
+            await loadToolsConfig(); // config.jsで定義された関数を呼び出す
+            const initialWeatherEnabled = CONFIG.TOOLS.some(tool => tool.name === 'get_weather');
+            const initialSearchEnabled = CONFIG.TOOLS.some(tool => tool.name === 'search_web');
+            UI.updateToolToggles(initialWeatherEnabled, initialSearchEnabled);
         });
+
+        UI.elements.toggleWeather.addEventListener('change', (e) => this.updateToolConfig('weather', e.target.checked));
+        UI.elements.toggleSearch.addEventListener('change', (e) => this.updateToolConfig('search', e.target.checked));
+    }
+
+    async updateToolConfig(toolName, enabled) {
+        try {
+            const response = await fetch('/tools_config');
+            const config = await response.json();
+            config[toolName].enabled = enabled;
+
+            await fetch('/update_tools_config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(config)
+            });
+            
+            // CONFIG.TOOLSを再ロード
+            CONFIG.TOOLS = [];
+            await loadToolsConfig();
+            console.log(`Tool ${toolName} enabled: ${enabled}. Updated CONFIG.TOOLS:`, CONFIG.TOOLS);
+            
+            // CONFIG.TOOLSを再ロード
+            CONFIG.TOOLS = [];
+            await loadToolsConfig();
+            console.log(`Tool ${toolName} enabled: ${enabled}. Updated CONFIG.TOOLS:`, CONFIG.TOOLS);
+            
+            // CONFIG.TOOLSを再ロード
+            CONFIG.TOOLS = [];
+            await loadToolsConfig();
+            console.log(`Tool ${toolName} enabled: ${enabled}. Updated CONFIG.TOOLS:`, CONFIG.TOOLS);
+
+        } catch (error) {
+            ErrorHandler.handle(error, `Update Tool Config for ${toolName}`);
+        }
     }
 
     async init() {
@@ -414,6 +464,10 @@ class App {
         
         try {
             UI.updateStatus('Initializing...');
+            
+            // ツール設定を最新の状態に更新
+            CONFIG.TOOLS = [];
+            await loadToolsConfig();
             
             const tokenResponse = await fetch(`${CONFIG.API_ENDPOINTS.session}?voice=${this.currentVoice}`);
             if (!tokenResponse.ok) {
@@ -513,4 +567,4 @@ function updateMap(latitude, longitude, locationName) {
 }
 
 // Initialize the application
-const app = new App(); 
+const app = new App();

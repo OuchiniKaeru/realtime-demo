@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenAI Real-time Audio Demo</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/>
@@ -40,6 +40,18 @@
                 <option value="shimmer">Shimmer</option>
                 <option value="verse">Verse</option>
             </select>
+            <div class="tool-toggles">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggleWeather" checked>
+                    <span class="slider round"></span>
+                </label>
+                <label for="toggleWeather">Weather</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggleSearch" checked>
+                    <span class="slider round"></span>
+                </label>
+                <label for="toggleSearch">Search</label>
+            </div>
         </div>
 
         <div class="content-wrapper">
@@ -64,7 +76,7 @@
         <div id="error" class="error"></div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="app.js" type="module"></script>
+    <script src="/static/config.js"></script>
+    <script src="/static/app.js" type="module"></script>
 </body>
 </html>
